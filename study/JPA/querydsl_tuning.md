@@ -149,9 +149,9 @@ Entity를 직접 조회하면 단순 조회 기능에서의 성능 이슈 요소
 
 ```
 + dto 사용 시, 패러미터로 받아서 이미 알고 있는 값은, as 표현식을 사용하여 조회하는 컬럼에서 제외 시켜줍니다.
-+ N+1 문제는 @OneToOne(fetch = FetchType.LAZY) 설정으로도 해결되지 않으며, Fetch Join 의 사용을 추천합니다. \
-(### 공부 필요!! 참고 : https://1-7171771.tistory.com/143)
++ N+1 문제는 @OneToOne(fetch = FetchType.LAZY) 설정으로도 해결되지 않으며, Fetch Join 의 사용을 추천합니다. 
 ```
+(Fetch Join 공부 필요!! 참고 : https://1-7171771.tistory.com/143)
 
 
 ### 2.4 Group By 최적화 하기.
@@ -159,4 +159,44 @@ Entity를 직접 조회하면 단순 조회 기능에서의 성능 이슈 요소
 MySQL에서 Group By를 실행 할 경우, Index를 타지 않으면 Filesort가 필수로 발생합니다.
 order by null 을 통해 Filesort 를 제거할 수 있지만 Querydsl 에서는 지원되지 않습니다.
 OrderByNull 을 직접 구현함으로서 해결 할 수 있습니다. 
+
+**Using filesort** 는 **정렬이 필요한 데이터를 메모리에 올리고 정렬 작업을 수행한다** 는 의미로, 이미 정렬된 인덱스를 사용함으로써 해결할 수 있습니다. 
+영상에서는 우리가 사용하는 모든 Group By 가 index를 탄다는 보장이 없기에 말하고 있습니다.
+
+하지만 8.0 이상을 사용하는 환경이라면 더 이상 고려하지 않아도 됩니다.
+```
+Previously (MySQL 5.7 and lower), GROUP BY sorted implicitly under certain conditions. In MySQL 8.0, that no longer occurs, so specifying ORDER BY NULL at the end to suppress implicit sorting (as was done previously) is no longer necessary. However, query results may differ from previous MySQL versions. To produce a given sort order, provide an ORDER BY clause.
+```
+https://dev.mysql.com/doc/refman/8.0/en/order-by-optimization.html
+
+마지막으로 **Paging 이 필요하지 않고 정렬 건수가 적다면 WAS에서 정렬** 하는 것을 추천합니다.
+일반적으로 WAS 리소스가 DB 리소스보다는 여유 있고 저렴하기 때문입니다.
+
+
+### 2.5 커버링 인덱스
+
+커버링 인덱스를 사용할 땐 inline view (from 절의 subQuery)에서 커버링 인덱스를 통해 필터를 하도록 하는 것이 일반적이지만,  
+JPQL은 from 절의 서브 쿼리를 지원하지 않아 직접 구현해야 합니다.(서브 쿼리를 빼서, select 절을 두번 조회)
+
+공부 필요!!!
+
+### 3. 성능 개선 - Update/Insert
+
+### 3.1 일괄 Update 최적화
+
+* Dirty Checking - 실시간 비즈니스 처리, 실시간 단건 처리
+* Querydsl.update - 대량의 데이터를 일괄로 Update 처리
+
+주의할 점은 일괄 업데이트는 **영속성 컨택스트의 1차 캐시 갱신이 안됨으로 Cache Eviction 이 필요** 합니다.
+
+공부 필요!!
+
+### 3.2 JPA로 Bulk Insert는 자제한다.
+
+JPA 에서는 **Insert 합치기가 적용되지 않는다.**
+
+영상에서 JdbcTemplate를 말하지만 type safe 하지 않은 단점과 함께 EntityQL를 소개합니다. 하지만 이도 설정과 사용법에 단점을 가지고 있으므로 선택적으로 사용해야 된다고 말합니다.
+다른 블로그에서는 Spring 진영에서 공식적으로 밀어주는 JOOQ를 추천합니다. starter 가 존재하기에 세팅도 쉽고, 사용 경험도 매우 좋았다고 합니다.
+
+공부 필요!!!
 
