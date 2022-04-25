@@ -1,9 +1,9 @@
 이 글의 내용은 [우아콘2020]의 '수십억건에서 querydsl 사용하기' 영상을 보고 정리하였습니다.
 제 글을 보신다면, 제글의 정리된 내용만 보는 것도 좋지만, 본 내용을 제공해준 유튜브를 한 번 꼭 보시는 것을 추천드립니다.
 
-[출저]
-* 수십억건에서 querydsl 사용하기(우아콘2020) 동영상
-* https://hyune-c.tistory.com/entry/%EC%88%98%EC%8B%AD%EC%96%B5%EA%B1%B4%EC%97%90%EC%84%9C-QUERYDSL-%EC%82%AC%EC%9A%A9%ED%95%98%EA%B8%B0-%ED%9B%84%EA%B8%B0
+[출처]
+* [수십억건에서 querydsl 사용하기(우아콘2020) 동영상](www.youtube.com/watch?v=zMAX7g6rO_Y)
+* ['수십억건에서 QUERYDSL 사용하기' 를 보고.. 블로그](https://hyune-c.tistory.com/entry/%EC%88%98%EC%8B%AD%EC%96%B5%EA%B1%B4%EC%97%90%EC%84%9C-QUERYDSL-%EC%82%AC%EC%9A%A9%ED%95%98%EA%B8%B0-%ED%9B%84%EA%B8%B0)
 
 --------
 
